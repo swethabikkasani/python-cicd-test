@@ -46,24 +46,12 @@ jobs:
         run: zip -qq -r main_app.zip ${{ github.workspace }}/main_app/
         working-directory: ${{ github.workspace }}/main_app/
                     
-      - name: Deploy tar to AWS S3
-        uses: qoqa/action-s3-cp@v1.1
+      - uses: jfrog/setup-jfrog-cli@v3
         env:
-           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-           AWS_REGION: 'us-east-1'
-           AWS_S3_PATH: '/Sample/'
-           FILE: '${{ github.workspace }}/main_app/*.zip'
-           
-      - name: Deploy tar to AWS S3
-        uses: qoqa/action-s3-cp@v1.1
-        env:
-           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-           AWS_REGION: 'us-east-1'
-           AWS_S3_PATH: '/Sample/'
-           FILE: '${{ github.workspace }}/pyspark_venv.tar.gz'
+	        JF_URL: ${{ secrets.JF_URL }}
+	        # JFrog Platform access token
+	        JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+        run: |
+          jf rt ping
            
 
