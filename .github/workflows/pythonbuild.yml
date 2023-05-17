@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install build 
+          pip install build setuptools 
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           
       - name: Lint with Ruff
@@ -35,8 +35,9 @@ jobs:
         
       - name: Build package
         run: |
-          python -m build
-          ls -la dist/
+          #python -m build
+          python setup.py sdist bdist_wheel
+          ls -la
           
       - name: Deploy tar to AWS S3
         uses: qoqa/action-s3-cp@v1.1
