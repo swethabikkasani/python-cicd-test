@@ -41,10 +41,14 @@ jobs:
       - name: Zip output
         run: zip -qq -r main_app.zip ${{ github.workspace }}/main_app/
         working-directory: ${{ github.workspace }}/main_app/
+      
       - uses: jfrog/setup-jfrog-cli@v3
         env:
           JF_URL: ${{ secrets.JF_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}          
+      # Run --version
+      - name: Check versions
+        run: jf --version && jfrog --version
       # This command adds a new server configuration to the JFrog CLI   
       - run: |
          export SERVER_ID="test"
@@ -57,11 +61,9 @@ jobs:
           export BUILD_NAME="my-build"
           export BUILD_MODULE="my-module"
           export BUILD_NUMBER="1"
-
-
-          export PATH_TO_DIRECTORY="name/version/dates"
+          #export PATH_TO_DIRECTORY="name/version/dates"
         
-          jf rt upload "test.txt" apcdl-pypi-local/$PATH_TO_DIRECTORY --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+          jf rt upload "test.txt" apcdl-pypi-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
 
 
    # This action publishes the build information to Artifactory and deletes older builds
