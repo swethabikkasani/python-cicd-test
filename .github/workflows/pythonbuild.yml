@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install build setuptools wheel twine 
+          pip install build setuptools wheel venv-pack 
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           
       - name: Lint with Ruff
@@ -35,9 +35,17 @@ jobs:
         
       - name: Build package
         run: |
-          python setup.py sdist bdist_wheel
+          python -m venv pyspark_venvsource
+          source pyspark_venvsource/bin/activate
+          venv-pack -f -o pyspark_venv.tar.gz
           ls -la
           
+      - name: Install zip
+        uses: montudor/action-zip@v1
+      - name: Zip output
+        run: zip -qq -r main_app.zip ${{ github.workspace }}/target/
+        working-directory: ${{ github.workspace }}/target/
+                    
       - name: Deploy tar to AWS S3
         uses: qoqa/action-s3-cp@v1.1
         env:
@@ -46,15 +54,6 @@ jobs:
            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
            AWS_REGION: 'us-east-1'
            AWS_S3_PATH: '/Sample/'
-           FILE: '${{ github.workspace }}/dist/*.tar.gz'
+           FILE: '${{ github.workspace }}/target/*.zip'
            
-      - name: Deploy whl to AWS S3
-        uses: qoqa/action-s3-cp@v1.1
-        env:
-           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-           AWS_REGION: 'us-east-1'
-           AWS_S3_PATH: '/Sample/'
-           FILE: '${{ github.workspace }}/dist/*.whl'
 
