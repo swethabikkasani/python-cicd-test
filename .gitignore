@@ -1,0 +1,15 @@
+#IDE
+.idea/
+.vscode/
+
+#python
+*.pyc
+venv/
+.venv/
+env/
+log/
+.log/
+
+#test.json
+tmp/
+excluded/
