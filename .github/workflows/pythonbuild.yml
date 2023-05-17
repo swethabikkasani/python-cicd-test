@@ -45,5 +45,26 @@ jobs:
         env:
           JF_URL: ${{ secrets.JF_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+      # This command adds a new server configuration to the JFrog CLI   
       - run: |
-          jf rt ping
+         export SERVER_ID="test"
+         jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
+         
+     # This action creates a new test file and uploads it to Artifactory   
+      - name: Push Build to Artifactory
+        run: |
+          echo "test file " > test.txt
+          export BUILD_NAME="my-build"
+          export BUILD_MODULE="my-module"
+          export BUILD_NUMBER="1"
+
+
+          export PATH_TO_DIRECTORY="name/version/dates"
+        
+          jf rt upload "test.txt" apcdl-pypi-local/$PATH_TO_DIRECTORY --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+
+
+   # This action publishes the build information to Artifactory and deletes older builds
+      - name: Build to Artifactory
+        run: |
+          jf rt build-publish $BUILD_NAME $BUILD_NUMBER
