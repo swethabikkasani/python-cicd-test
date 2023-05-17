@@ -34,5 +34,7 @@ jobs:
         continue-on-error: true
         
       - name: Build package
-        run: python -m build
+        run: |
+          python -m build
+          ls -la
 
