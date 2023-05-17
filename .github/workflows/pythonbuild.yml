@@ -36,5 +36,5 @@ jobs:
       - name: Build package
         run: |
           python -m build
-          ls -la
+          ls -la dist/
 
