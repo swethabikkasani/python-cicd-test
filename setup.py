@@ -1,29 +1,35 @@
-from setuptools import setup, find_packages
+import os
+import setuptools
+from pip._internal.req import parse_requirements
 
-VERSION = '0.0.1' 
-DESCRIPTION = 'Python CICD package'
-LONG_DESCRIPTION = 'Python CICD package'
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
 
-# Setting up
-setup(
-       # the name must match the folder name 'verysimplemodule'
-        name="python-cicd", 
-        version=VERSION,
-        author="Swetha Bikkasani",
-        author_email="sbikkasani@deloitte.com",
-        description=DESCRIPTION,
-        long_description=LONG_DESCRIPTION,
-        packages=find_packages(),
-        install_requires=[], # add any additional packages that 
-        # needs to be installed along with your package. Eg: 'caer'
-        
-        keywords=['python', 'cicd', 'ci-cd'],
-        classifiers= [
-            "Development Status :: Initial Phase",
-            "Intended Audience :: Takeda APCDL Users",
-            "Programming Language :: Python :: 2",
-            "Programming Language :: Python :: 3",
-            "Operating System :: MacOS :: Ubuntu",
-            "Operating System :: Microsoft :: Windows",
-        ]
+INSTALL_REQS = parse_requirements("requirements.txt", session="hack")
+
+try:
+    REQS = [str(ir.req) for ir in INSTALL_REQS]
+except AttributeError:
+    REQS = [str(ir.requirement) for ir in INSTALL_REQS]
+
+setuptools.setup(
+    name='src spark app',
+    version="0.0.1",
+    author="Takeda",
+    author_email="takeda@takeda.com",
+    description="spark runner",
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=REQS,
+    package_data={
+        # If any package contains *.txt or *.rst files, include them:
+        '': ['*.conf'],
+    },
+    packages=setuptools.find_packages(include=
+    [
+        'src_spark_app*'
+    ]),
+    setup_requires=[],
+    py_modules=[],
+    python_requires=">=3.7"
 )

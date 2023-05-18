@@ -1,0 +1,13 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+py4j = "==0.10.9.7"
+pyspark = "==3.4.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

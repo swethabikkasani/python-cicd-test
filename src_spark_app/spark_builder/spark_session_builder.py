@@ -6,7 +6,7 @@ from pyspark.sql import SparkSession
 @dataclass
 class SparkInitializer:
 
-    def create_spark_session(self, flow_name) -> SparkSession:
+    def create_spark_session(self) -> SparkSession:
 
         spark = SparkSession \
             .builder \

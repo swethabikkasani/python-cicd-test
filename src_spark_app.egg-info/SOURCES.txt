@@ -1,0 +1,15 @@
+README.md
+setup.py
+src_spark_app.egg-info/PKG-INFO
+src_spark_app.egg-info/SOURCES.txt
+src_spark_app.egg-info/dependency_links.txt
+src_spark_app.egg-info/not-zip-safe
+src_spark_app.egg-info/requires.txt
+src_spark_app.egg-info/top_level.txt
+src_spark_app_x/__init__.py
+src_spark_app_x/config_read/__init__.py
+src_spark_app_x/config_read/read_conf_file.py
+src_spark_app_x/main_app/__init__.py
+src_spark_app_x/main_app/start_app.py
+src_spark_app_x/spark_builder/__init__.py
+src_spark_app_x/spark_builder/spark_session_builder.py
