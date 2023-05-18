@@ -51,25 +51,6 @@ jobs:
            AWS_S3_PATH: '/PyBuilds/'
            FILE: '${{ github.workspace }}/dist/*.whl'
            
-      - name: Build Virtual Env
-        run: |
-          python3 -m venv pyspark_venvsource
-          source pyspark_venvsource/bin/activate
-          pip3 install -r requirements.txt
-          pip install --no-cache-dir ${library-developed}==0.0.1
-          pip3 install venv-pack
-          venv-pack -f -o pyspark_venv.tar.gz
-          
-      - name: Deploy Virtual Env to S3
-        uses: qoqa/action-s3-cp@v1.1
-        env:
-           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-           AWS_REGION: 'us-east-1'
-           AWS_S3_PATH: '/VirtualEnv/'
-           FILE: '${{ github.workspace }}/pyspark_venv.tar.gz'
-           
       - name: Deploy Python Starter file to S3
         uses: qoqa/action-s3-cp@v1.1
         env:
@@ -89,4 +70,24 @@ jobs:
            AWS_REGION: 'us-east-1'
            AWS_S3_PATH: '/VirtualEnv/'
            FILE: '${{ github.workspace }}/scripts/start_py_script.sh'
-        
+           
+      - name: Build Virtual Env
+        run: |
+          python3 -m venv pyspark_venvsource
+          source pyspark_venvsource/bin/activate
+          pip3 install -r requirements.txt
+          pip install --no-cache-dir ${{ github.workspace }}/dist/*.whl
+          pip3 install venv-pack
+          venv-pack -f -o pyspark_venv.tar.gz
+          
+      - name: Deploy Virtual Env to S3
+        uses: qoqa/action-s3-cp@v1.1
+        env:
+           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+           AWS_REGION: 'us-east-1'
+           AWS_S3_PATH: '/VirtualEnv/'
+           FILE: '${{ github.workspace }}/pyspark_venv.tar.gz'
+           
+             
