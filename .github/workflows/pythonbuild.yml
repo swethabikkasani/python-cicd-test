@@ -15,7 +15,7 @@ jobs:
     steps: 
       - uses: jfrog/setup-jfrog-cli@v3
         env:
-          JF_URL: https://takedaawsuseast.jfrog.io/artifactory/
+          JF_URL: https://takedaawsuseast.jfrog.io/
           JF_ACCESS_TOKEN: cmVmdGtuOjAxOjE3MTUzNTI5MDg6TVVnUEJoSVhFdDdnVzBWRjJLUWFiczFXWGRa   
           
       # Run --version
