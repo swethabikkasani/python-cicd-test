@@ -54,7 +54,7 @@ jobs:
       - run: |
          export SERVER_ID="test"
          jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
-         export BUILD_NUMBER = JFROG_CLI_BUILD_NUMBER
+         export BUILD_NUMBER=$JFROG_CLI_BUILD_NUMBER
          
       # This action creates a new test file and uploads it to Artifactory   
       - name: Push Build to Artifactory
