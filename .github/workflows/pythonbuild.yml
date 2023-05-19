@@ -60,15 +60,7 @@ jobs:
         run: |
              jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/
              
-      - name: Sleep for 10 seconds
-        run: sleep 05s
-        shell: bash
-
-      # This action publishes the build information to Artifactory and deletes older builds
-      - name: Build to Artifactory
-        run: |
-             jf rt build-publish $BUILD_NAME $BUILD_NUMBER
-           
+              
       
            
      
