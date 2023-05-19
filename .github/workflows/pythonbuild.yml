@@ -58,7 +58,7 @@ jobs:
       # This action creates a new test file and uploads it to Artifactory   
       - name: Push Build to Artifactory
         run: |
-             jfrog rt del --spec apcdl-pypi-local/src_spark_app-0.0.1-py3-none-any.whl
+             jf rt del --spec apcdl-pypi-local/src_spark_app-0.0.1-py3-none-any.whl
              jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/
              
               
