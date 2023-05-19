@@ -13,10 +13,54 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps: 
+    
+      ---
+name: Python package
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          
+      - name: DisplayPythonversion
+        run: python -c "import sys; print(sys.version)"
+        
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build setuptools wheel
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          
+      - name: Lint with Ruff
+        run: |
+          pip install ruff
+          ruff --format=github --target-version=py39 .
+        continue-on-error: true
+        
+      - name: Build package
+        run: |
+          pipenv lock
+          python3 setup.py bdist_wheel
+          ls -la
+          
       - uses: jfrog/setup-jfrog-cli@v3
         env:
-          JF_URL: https://takedaawsuseast.jfrog.io/
-          JF_ACCESS_TOKEN: cmVmdGtuOjAxOjE3MTUzNTI5MDg6TVVnUEJoSVhFdDdnVzBWRjJLUWFiczFXWGRa   
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}   
           
       # Run --version
       - name: Check versions
@@ -30,13 +74,7 @@ jobs:
      # This action creates a new test file and uploads it to Artifactory   
       - name: Push Build to Artifactory
         run: |
-          echo "test file " > test.txt
-          export BUILD_NAME="my-build"
-          export BUILD_MODULE="my-module"
-          export BUILD_NUMBER="1"
-          #export PATH_TO_DIRECTORY="name/version/dates"
-        
-          jf rt upload "test.txt" apcdl-pypi-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER --module $BUILD_MODULE
+             jf rt upload '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/pybuilds/ 
 
 
    # This action publishes the build information to Artifactory and deletes older builds
