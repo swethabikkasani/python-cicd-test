@@ -58,7 +58,7 @@ jobs:
       # This action creates a new test file and uploads it to Artifactory   
       - name: Push Build to Artifactory
         run: |
-             jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/ --build-number $JFROG_CLI_BUILD_NUMBER
+             jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/ --build-number '${{ JFROG_CLI_BUILD_NUMBER }}'
              
               
       
