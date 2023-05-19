@@ -12,22 +12,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps: 
-    
-      ---
-name: Python package
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-permissions:
-  contents: read
-jobs:
-  build:
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       
@@ -71,13 +55,13 @@ jobs:
          export SERVER_ID="test"
          jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
          
-     # This action creates a new test file and uploads it to Artifactory   
+      # This action creates a new test file and uploads it to Artifactory   
       - name: Push Build to Artifactory
         run: |
              jf rt upload '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/pybuilds/ 
 
 
-   # This action publishes the build information to Artifactory and deletes older builds
+      # This action publishes the build information to Artifactory and deletes older builds
       - name: Build to Artifactory
         run: |
           jf rt build-publish $BUILD_NAME $BUILD_NUMBER
