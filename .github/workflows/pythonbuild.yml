@@ -64,10 +64,10 @@ jobs:
          echo $BUILD_NUMBER
          
       # This action creates a new test file and uploads it to Artifactory   
-      #- name: Push Build to Artifactory
-      #  run: |
-      #       echo $BUILD_NAME
-      #       echo $BUILD_NUMBER
+      - name: Push Build to Artifactory
+        run: |
+             echo $BUILD_NAME
+             echo $BUILD_NUMBER
       #       jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/ --build-name $BUILD_NAME --build-number $BUILD_NUMBER
              
               
