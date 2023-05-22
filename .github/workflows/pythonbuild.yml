@@ -9,10 +9,7 @@ on:
       - main
 permissions:
   contents: read
-env:
-  BUILD_NUMER: "1"
-  BUILD_NAME: "PYTHON"
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -58,10 +55,6 @@ jobs:
       - run: |
          export SERVER_ID="test"
          jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
-         BUILD_NUMBER="$JFROG_CLI_BUILD_NUMBER"
-         BUILD_NAME="$JFROG_CLI_BUILD_NAME"
-         echo $BUILD_NAME
-         echo $BUILD_NUMBER
          
       # This action creates a new test file and uploads it to Artifactory   
       - name: Push Build to Artifactory
