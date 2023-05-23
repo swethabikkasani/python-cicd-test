@@ -56,10 +56,15 @@ jobs:
          export SERVER_ID="test"
          jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
          
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+      - name: Echo current date
+        run: echo $NOW
+         
       # This action creates a new test file and uploads it to Artifactory   
-      - name: Push Build to Artifactory
-        run: |
-             jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/ 
+      #- name: Push Build to Artifactory
+      #  run: |
+      #      jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/ 
              
              
               
