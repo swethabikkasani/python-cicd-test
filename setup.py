@@ -14,7 +14,7 @@ except AttributeError:
 
 setuptools.setup(
     name='src spark app',
-    version="0.0.1",
+    version="0.0.2",
     author="Takeda",
     author_email="takeda@takeda.com",
     description="spark runner",
