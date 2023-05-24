@@ -12,7 +12,7 @@ on:
 jobs:
   build:
     name: Create Release  
-    if: github.event.pull_request.merged == true
+    #if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Taking the Latest Release Tag number
@@ -30,7 +30,7 @@ jobs:
         
       - name: Bumping Major Index
         id: bump_version_major
-        if: contains(github.event.pull_request.title, 'major')
+        if: contains(github.event.head_commit.message, 'major')
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{ steps.releaseVersion.outputs.Release_tag }}
@@ -38,7 +38,7 @@ jobs:
                     
       - name: Bumping Minor Index
         id: bump_version_minor
-        if: contains(github.event.pull_request.title, 'minor')
+        if: contains(github.event.head_commit.message, 'minor')
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{ steps.releaseVersion.outputs.Release_tag }}
@@ -46,7 +46,7 @@ jobs:
           
       - name: Bumping Patch Index 
         id: bump_version_patch
-        if: contains(github.event.pull_request.title, 'patch')
+        if: contains(github.event.head_commit.message, 'patch')
         uses: christian-draeger/increment-semantic-version@1.0.2
         with:
           current-version: ${{ steps.releaseVersion.outputs.Release_tag }}
