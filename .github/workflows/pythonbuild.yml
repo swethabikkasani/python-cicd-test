@@ -49,7 +49,7 @@ jobs:
         id: semvers-minor
         run: |
              ls -la
-             `.${{ github.workspace }}/increment_version.sh -m ${{ steps.previoustag.outputs.tag }}`
+             ./increment_version.sh -m ${{ steps.previoustag.outputs.tag }}
           
         #uses: "WyriHaximus/github-action-next-semvers@v1"
         #with:
