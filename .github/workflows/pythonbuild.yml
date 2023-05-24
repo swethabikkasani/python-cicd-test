@@ -22,21 +22,16 @@ jobs:
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
-          
-      - name: Identify the Release type
-        run: |
-            echo '${{ github.event.head_commit.message }}'
-            
+          python-version: "3.9"            
           
       - name: DisplayPythonversion
         run: python -c "import sys; print(sys.version)"
         
-     # - name: Install dependencies
-     #   run: |
-     #     python -m pip install --upgrade pip
-     #     pip install build setuptools wheel pipenv
-     #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build setuptools wheel pipenv
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           
      # - name: Lint with Ruff
      #   run: |
@@ -82,19 +77,20 @@ jobs:
           github_token: ${{ secrets.MY_GITHUB_TOKEN }}
           custom_tag: ${{ env.newtagvalue }}
           
-      #- name: Create a GitHub release
-      #  uses: ncipollo/release-action@v1
-      #  with:
-      #    tag: ${{ steps.tag_version.outputs.new_tag }}
-      #    name: Release ${{ steps.tag_version.outputs.new_tag }}
-      #    body: ${{ steps.tag_version.outputs.changelog }}
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
         
-      #- name: Build package
-      #  run: |
-      #    rm -rf dist/*.whl
-      #    pipenv lock
-      #    python3 setup.py bdist_wheel
-      #    ls -la
+      - name: Build package
+        run: |
+          rm -rf dist/*.whl
+          pipenv lock
+          python3 setup.py bdist_wheel
+          mv '${{ github.workspace }}/dist/src_spark_app-0.0.1-py3-none-any.whl' '${{ github.workspace }}/dist/src_spark_app-${{ env.newtagvalue }}.whl'
+          ls -la dist/
           
       #- uses: jfrog/setup-jfrog-cli@v3
       #  env:
