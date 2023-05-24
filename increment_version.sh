@@ -16,10 +16,11 @@ done
 shift $(($OPTIND - 1))
 
 version=$1
+cversion=$(echo "$version" | sed 's/[a-z][A-Z]*//g')
 
 # Build array from version string.
 
-a=( ${version/././ } )
+a=( ${cversion//./ } )
 
 # If version string is missing or has the wrong number of members, show usage message.
 
