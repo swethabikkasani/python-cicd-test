@@ -61,7 +61,7 @@ jobs:
              elif grep -q "patch" <<< "${{ github.event.head_commit.message }}"; then
              release_type=p
              fi
-             echo $release_type
+             echo release_type
              ls -la
              chmod +x increment_version.sh
              ./increment_version.sh -$release_type ${{ steps.previoustag.outputs.tag }}
