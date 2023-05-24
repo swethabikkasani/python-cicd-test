@@ -64,7 +64,9 @@ jobs:
              echo "$release_type"
              ls -la
              chmod +x increment_version.sh
-             ./increment_version.sh -$release_type ${{ steps.previoustag.outputs.tag }}
+             echo "newtagvalue=./increment_version.sh -$release_type ${{ steps.previoustag.outputs.tag }}" >> $GITHUB_ENV
+             echo "${{ env.newtagvalue }}"
+             
              
                
       #- name: Bump version and push tag
