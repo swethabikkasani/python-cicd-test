@@ -37,8 +37,13 @@ jobs:
      #     ruff --format=github --target-version=py39 .
      #   continue-on-error: true
      
-      - run: echo "previous_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> $GITHUB_ENV
-      - run: echo ${{ env.previous_tag }}
+      - name: Get Previous Tag Version
+        run: |
+             git describe --tags --abbrev=0 2>/dev/null
+             echo "previous_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> $GITHUB_ENV
+             echo ${{ env.previous_tag }}
+        shell: bash
+        
       - name: Create Tag
         id: create_tag
         uses: jaywcjlove/create-tag-action@main
