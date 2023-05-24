@@ -36,23 +36,18 @@ jobs:
      #     ruff --format=github --target-version=py39 .
      #   continue-on-error: true
         
-      - name: Cache setup.py
-        id: cache-setup
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-setup-file
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
         with:
-          path: '${{ github.workspace }}/setup.py'
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
-          restore-keys: |
-            ${{ runner.os }}-build-cache
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-            
-      - if: ${{ steps.cache-setup.outputs.cache-hit == 'true' }}
-        name: Setup.py from Cache
-        continue-on-error: true
-        run: echo "Setup.py cache file found"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
         
       #- name: Build package
       #  run: |
