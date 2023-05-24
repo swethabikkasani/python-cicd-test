@@ -81,7 +81,6 @@ jobs:
         run: |
              echo "NOW=$(date +'%Y%m%dT%H%M%S')" >> $GITHUB_ENV
              echo $NOW
-             echo "{{ env.NOW }}"
 
          
        # This action creates a new test file and uploads it to Artifactory   
