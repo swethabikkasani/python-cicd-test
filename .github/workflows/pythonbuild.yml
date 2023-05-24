@@ -30,17 +30,36 @@ jobs:
           pip install build setuptools wheel pipenv
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           
-      - name: Lint with Ruff
-        run: |
-          pip install ruff
-          ruff --format=github --target-version=py39 .
-        continue-on-error: true
+     # - name: Lint with Ruff
+     #   run: |
+     #     pip install ruff
+     #     ruff --format=github --target-version=py39 .
+     #   continue-on-error: true
         
-      - name: Build package
-        run: |
-          pipenv lock
-          python3 setup.py bdist_wheel
-          ls -la
+      - name: Cache setup.py
+        id: cache-setup
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-setup-file
+        with:
+          path: '${{ github.workspace }}/setup.py'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+          restore-keys: |
+            ${{ runner.os }}-build-cache
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+            
+      - if: ${{ steps.cache-setup.outputs.cache-hit == 'true' }}
+        name: Setup.py from Cache
+        continue-on-error: true
+        run: echo "Setup.py cache file found"
+        
+      #- name: Build package
+      #  run: |
+      #    rm -rf dist/*.whl
+      #    pipenv lock
+      #    python3 setup.py bdist_wheel
+      #    ls -la
           
       - uses: jfrog/setup-jfrog-cli@v3
         env:
@@ -66,11 +85,11 @@ jobs:
 
          
        # This action creates a new test file and uploads it to Artifactory   
-      - name: Push Build to Artifactory
-        run: |
-             mv '${{ github.workspace }}/dist/src_spark_app-0.0.1-py3-none-any.whl' '${{ github.workspace }}/dist/src_spark_app-${{ env.NOW }}.whl'
-             ls -la dist/
-             jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/ 
+     # - name: Push Build to Artifactory
+     #   run: |
+      #       mv '${{ github.workspace }}/dist/src_spark_app-0.0.1-py3-none-any.whl' '${{ github.workspace }}/dist/src_spark_app-${{ env.NOW }}.whl'
+       #      ls -la dist/
+        #     jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/ 
  
              
              
