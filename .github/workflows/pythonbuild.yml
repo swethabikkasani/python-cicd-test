@@ -37,11 +37,20 @@ jobs:
      #     ruff --format=github --target-version=py39 .
      #   continue-on-error: true
      
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.64.0 # Don't use @master or @v1 unless you're happy to test the latest version
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
-          WITH_V: false
+      - run: echo "previous_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> $GITHUB_ENV
+      - run: echo $previous_tag
+      - name: Create Tag
+        id: create_tag
+        uses: jaywcjlove/create-tag-action@main
+        if: env.previous_tag
+        #with:
+        #  package-path: ./package.json 
+     
+      #- name: Bump version and push tag
+      # uses: anothrNick/github-tag-action@1.64.0 # Don't use @master or @v1 unless you're happy to test the latest version
+      # env:
+      #    GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
+      #    WITH_V: false
         
       #- name: Bump version and push tag
       #  id: tag_version
