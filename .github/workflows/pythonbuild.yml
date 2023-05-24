@@ -64,9 +64,7 @@ jobs:
              echo "$release_type"
              ls -la
              chmod +x increment_version.sh
-             newtagvalue=`./increment_version.sh -$release_type ${{ steps.previoustag.outputs.tag }}`
-             echo "$newtagvalue"
-             
+             echo "newtagvalue=$(./increment_version.sh -$release_type ${{ steps.previoustag.outputs.tag }} )" >> $GITHUB_ENV            
              
                
       #- name: Bump version and push tag
@@ -75,7 +73,7 @@ jobs:
       #    GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
       #    WITH_V: false        
       
-      - run: echo "$newtagvalue"
+      - run: echo "${{ env.newtagvalue }}"
         
       - name: Bump version and push tag
         id: tag_version
