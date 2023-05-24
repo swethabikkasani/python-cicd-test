@@ -26,7 +26,8 @@ jobs:
           
       - name: Identify the Release type
         run: |
-            echo '${{ github.event.head_commit.message }}'              
+            echo '${{ github.event.head_commit.message }}'
+            
           
       - name: DisplayPythonversion
         run: python -c "import sys; print(sys.version)"
@@ -52,9 +53,18 @@ jobs:
       - name: 'Get next minor version'
         id: semvers-minor
         run: |
+             release_type=p
+             if grep -q "minor" <<< "${{ github.event.head_commit.message }}"; then
+             release_type=m
+             elif grep -q "major" <<< "${{ github.event.head_commit.message }}"; then
+             release_type=M
+             elif grep -q "patch" <<< "${{ github.event.head_commit.message }}"; then
+             release_type=p
+             fi
+             echo $release_type
              ls -la
              chmod +x increment_version.sh
-             ./increment_version.sh -m ${{ steps.previoustag.outputs.tag }}
+             ./increment_version.sh -$release_type ${{ steps.previoustag.outputs.tag }}
           
         #uses: "WyriHaximus/github-action-next-semvers@v1"
         #with:
