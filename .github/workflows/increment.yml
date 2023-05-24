@@ -1,46 +1,74 @@
+name: Creation of Release Version
 on:
-  push:
-    branches:
-      - main
   pull_request:
-    branches:
-      - main
-permissions:
-  contents: read
+    branches: [main]
+    types:
+      - closed
 
 jobs:
-  my-increment-semver-job:
+  build:
+    name: Create Release  
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    name: A job to test incrementing the version of a repository
     steps:
-
-#      Note Checkout is required for ${GITHUB_WORKSPACE} to be not empty
-      - name: Checkout
-        uses: actions/checkout@v1
-
-
-#     Examples
-      - name: Increment Step Patch
-        id: increment-semver-patch
-        uses: Benbentwo/increment-semver@master
-        with:
-          version-level: '-p'
-
-      - name: Increment Step Minor
-        id: increment-semver-minor
-        uses: Benbentwo/increment-semver@master
-        with:
-          version-level: '-m'
-
-      - name: Increment Step Major
-        id: increment-semver-major
-        uses: Benbentwo/increment-semver@master
-        with:
-          version-level: '-M'
-
-      # Use the output from the `Increment Step X` step
-      - name: Get the output version
+      - name: Taking the Latest Release Tag number
+        id: releaseVersion
         run: |
-          echo "The new patch version was ${{ steps.increment-semver-patch.outputs.version }}"
-          echo "The new minor version was ${{ steps.increment-semver-minor.outputs.version }}"
-          echo "The new Major version was ${{ steps.increment-semver-major.outputs.version }}"
+          owner="swethabikkasani"
+          repo="python-cicd-test"
+          release_json=$(curl https://api.github.com/repos/$owner/$repo/releases)
+          Release_tag=$(echo "$release_json" | jq -r '.[0].tag_name')
+          echo "Release_tag: Latest Tag is : $Release_tag"
+          echo ::set-output name=Release_tag::"$Release_tag"
+          
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Bumping Major Index
+        id: bump_version_major
+        if: contains(github.event.pull_request.title, 'major')
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.releaseVersion.outputs.Release_tag }}
+          version-fragment: 'major'
+                    
+      - name: Bumping Minor Index
+        id: bump_version_minor
+        if: contains(github.event.pull_request.title, 'minor')
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.releaseVersion.outputs.Release_tag }}
+          version-fragment: 'feature'
+          
+      - name: Bumping Patch Index 
+        id: bump_version_patch
+        if: contains(github.event.pull_request.title, 'patch')
+        uses: christian-draeger/increment-semantic-version@1.0.2
+        with:
+          current-version: ${{ steps.releaseVersion.outputs.Release_tag }}
+          version-fragment: 'bug'
+          
+      - name: Create release version for bump_version_major
+        env: 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          owner="swethabikkasani"
+          repo="python-cicd-test"
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+             https://api.github.com/repos/$owner/$repo/releases \
+            -d '{"tag_name":"${{ steps.bump_version_major.outputs.next-version }}","target_commitish":"master","name":"${{ steps.bump_version_major.outputs.next-version }}","body":"Description of the release","draft":false,"prerelease":false,"generate_release_notes":false}'
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+             https://api.github.com/repos/$owner/$repo/releases \
+            -d '{"tag_name":"${{ steps.bump_version_minor.outputs.next-version }}","target_commitish":"master","name":"${{ steps.bump_version_minor.outputs.next-version }}","body":"Description of the release","draft":false,"prerelease":false,"generate_release_notes":false}'
+          curl \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+             https://api.github.com/repos/$owner/$repo/releases \
+            -d '{"tag_name":"${{ steps.bump_version_patch.outputs.next-version }}","target_commitish":"master","name":"${{ steps.bump_version_patch.outputs.next-version }}","body":"Description of the release","draft":false,"prerelease":false,"generate_release_notes":false}'
