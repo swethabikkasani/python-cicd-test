@@ -24,11 +24,11 @@ jobs:
       - name: DisplayPythonversion
         run: python -c "import sys; print(sys.version)"
         
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install build setuptools wheel pipenv
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+     # - name: Install dependencies
+     #   run: |
+     #     python -m pip install --upgrade pip
+     #     pip install build setuptools wheel pipenv
+     #     if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           
      # - name: Lint with Ruff
      #   run: |
@@ -56,26 +56,26 @@ jobs:
       #    python3 setup.py bdist_wheel
       #    ls -la
           
-      - uses: jfrog/setup-jfrog-cli@v3
-        env:
-          JF_URL: ${{ secrets.JF_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}   
+      #- uses: jfrog/setup-jfrog-cli@v3
+      #  env:
+      #    JF_URL: ${{ secrets.JF_URL }}
+      #    JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}   
           
       # Run --version
-      - name: Check versions
-        run: jf --version && jfrog --version
+      #- name: Check versions
+      #  run: jf --version && jfrog --version
         
       # This command adds a new server configuration to the JFrog CLI   
-      - run: |
-         export SERVER_ID="test"
-         jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
+      #- run: |
+      #   export SERVER_ID="test"
+      #   jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
                      
         
-      - name: Set Current Date as Env Variable
-        id: setdate
-        run: |
-             echo "NOW=$(date +'%Y%m%dT%H%M%S')" >> $GITHUB_ENV
-             echo $NOW
+      #- name: Set Current Date as Env Variable
+      #  id: setdate
+      #  run: |
+      #       echo "NOW=$(date +'%Y%m%dT%H%M%S')" >> $GITHUB_ENV
+      #       echo $NOW
 
          
        # This action creates a new test file and uploads it to Artifactory   
