@@ -6,7 +6,10 @@ on:
       - main
   pull_request:
     branches:
-      - main 
+      - main
+    paths-ignore:
+      - '.github/**/*.yml'
+      - '.gitignore'
       
 jobs:
   build:
