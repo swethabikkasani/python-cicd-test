@@ -49,6 +49,7 @@ jobs:
         id: semvers-minor
         run: |
              ls -la
+             chmod +x increment_version.sh
              ./increment_version.sh -m ${{ steps.previoustag.outputs.tag }}
           
         #uses: "WyriHaximus/github-action-next-semvers@v1"
