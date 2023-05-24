@@ -24,6 +24,10 @@ jobs:
         with:
           python-version: "3.9"
           
+      - name: Identify the Release type
+        run: |
+            echo '${{ github.event.head_commit.message }}'              
+          
       - name: DisplayPythonversion
         run: python -c "import sys; print(sys.version)"
         
