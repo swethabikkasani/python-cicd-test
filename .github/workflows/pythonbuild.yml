@@ -48,7 +48,8 @@ jobs:
       - name: 'Get next minor version'
         id: semvers-minor
         run: |
-            `.${{ github.workspace }}/increment_version.sh -m ${{ steps.previoustag.outputs.tag }}`
+             ls -la
+             `.${{ github.workspace }}/increment_version.sh -m ${{ steps.previoustag.outputs.tag }}`
           
         #uses: "WyriHaximus/github-action-next-semvers@v1"
         #with:
