@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Required due to the way Git works, without it this action won't be able to find any or the correct tags
       
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
@@ -37,17 +39,16 @@ jobs:
      #     ruff --format=github --target-version=py39 .
      #   continue-on-error: true
      
-      - name: Get Previous Tag Version
-        run: |
-             git describe --tags --abbrev=0 2>/dev/null
-             echo "previous_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> $GITHUB_ENV
-             echo ${{ env.previous_tag }}
-        shell: bash
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 0.0.0 # Optional fallback tag to use when no tag can be found
         
       - name: Create Tag
         id: create_tag
         uses: jaywcjlove/create-tag-action@main
-        if: env.previous_tag
+        if: ${{ steps.previoustag.outputs.tag }}
         #with:
         #  package-path: ./package.json 
      
