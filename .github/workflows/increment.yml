@@ -1,7 +1,11 @@
 name: Creation of Release Version
 on:
-  pull_request:
-    branches: [main]
+   push:
+    branches:
+      - main
+   pull_request:
+    branches:
+      - main
     types:
       - closed
       
