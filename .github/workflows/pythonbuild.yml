@@ -46,10 +46,13 @@ jobs:
           fallback: 0.0.0 # Optional fallback tag to use when no tag can be found
         
       - name: 'Get next minor version'
-        id: semvers
-        uses: "WyriHaximus/github-action-next-semvers@v1"
-        with:
-          version: ${{ steps.previoustag.outputs.tag }} 
+        id: semvers-minor
+        run: |
+            `.${{ github.workspace }}/increment_version.sh -m ${{ steps.previoustag.outputs.tag }}`
+          
+        #uses: "WyriHaximus/github-action-next-semvers@v1"
+        #with:
+        #  version: ${{ steps.previoustag.outputs.tag }} 
      
       #- name: Bump version and push tag
       # uses: anothrNick/github-tag-action@1.64.0 # Don't use @master or @v1 unless you're happy to test the latest version
