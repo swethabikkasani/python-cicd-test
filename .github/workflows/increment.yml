@@ -2,10 +2,10 @@ name: Creation of Release Version
 on:
    push:
     branches:
-      - main
+      - <<branch>>
    pull_request:
     branches:
-      - main
+      - <<branch>>
     types:
       - closed
       
