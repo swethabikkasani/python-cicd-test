@@ -72,6 +72,9 @@ jobs:
               
       - name: Build package
         run: |
+          cat setup.py
+          sed -i 's/0.0.2/${{ env.newtagvalue }}/' setup.py
+          cat setup.py
           pipenv lock
           python3 setup.py bdist_wheel
           ls -la dist/
@@ -95,14 +98,14 @@ jobs:
         run: jf --version && jfrog --version
         
      # This command adds a new server configuration to the JFrog CLI   
-      - run: |
-         export SERVER_ID="test"
-         jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
+     # - run: |
+     #   export SERVER_ID="test"
+     #    jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
          
      # This action creates a new test file and uploads it to Artifactory   
-      - name: Push Build to Artifactory
-        run: |
-             jf rt upload --flat=true '${{ github.workspace }}/dist/src_spark_app-${{ env.newtagvalue }}.whl' apcdl-pypi-local/ 
+     # - name: Push Build to Artifactory
+     #   run: |
+     #        jf rt upload --flat=true '${{ github.workspace }}/dist/src_spark_app-${{ env.newtagvalue }}.whl' apcdl-pypi-local/ 
  
              
              
