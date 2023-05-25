@@ -73,8 +73,8 @@ jobs:
       - name: Build package
         run: |
           cat setup.py
-          #sed 's/^version=.*/version=${{ env.newtagvalue }}/' setup.py
-          sed -i 's/0.0.2/${{ env.newtagvalue }}/' setup.py
+          sed -i "s/^version=.*/version=\"${{ env.newtagvalue }}\",/" setup.py
+          #sed -i 's/0.0.2/${{ env.newtagvalue }}/' setup.py
           cat setup.py
           pipenv lock
           python3 setup.py bdist_wheel
