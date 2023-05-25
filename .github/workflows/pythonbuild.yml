@@ -33,11 +33,11 @@ jobs:
           pip install build setuptools wheel pipenv
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           
-     # - name: Lint with Ruff
-     #   run: |
-     #     pip install ruff
-     #     ruff --format=github --target-version=py39 .
-     #   continue-on-error: true
+      - name: Lint with Ruff
+        run: |
+          pip install ruff
+          ruff --format=github --target-version=py39 .
+        continue-on-error: true
      
       - name: 'Get Previous tag'
         id: previoustag
@@ -59,16 +59,9 @@ jobs:
              echo "$release_type"
              ls -la
              chmod +x increment_version.sh
-             echo "newtagvalue=$(./increment_version.sh -$release_type ${{ steps.previoustag.outputs.tag }} )" >> $GITHUB_ENV            
-             
-               
-      #- name: Bump version and push tag
-      # uses: anothrNick/github-tag-action@1.64.0 # Don't use @master or @v1 unless you're happy to test the latest version
-      # env:
-      #    GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
-      #    WITH_V: false        
+             echo "newtagvalue=$(./increment_version.sh -$release_type ${{ steps.previoustag.outputs.tag }} )" >> $GITHUB_ENV       
       
-      - run: echo "${{ env.newtagvalue }}"
+      - run: echo "New Tag Value is ${{ env.newtagvalue }}"
         
       - name: Bump version and push tag
         id: tag_version
@@ -79,8 +72,6 @@ jobs:
               
       - name: Build package
         run: |
-          #rm -rf dist/*.whl
-          ls -la dist/
           pipenv lock
           python3 setup.py bdist_wheel
           ls -la dist/
@@ -94,34 +85,24 @@ jobs:
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
           
-      #- uses: jfrog/setup-jfrog-cli@v3
-      #  env:
-      #    JF_URL: ${{ secrets.JF_URL }}
-      #    JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}   
+      - uses: jfrog/setup-jfrog-cli@v3
+        env:
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}   
           
-      # Run --version
-      #- name: Check versions
-      #  run: jf --version && jfrog --version
+     # Run --version
+      - name: Check versions
+        run: jf --version && jfrog --version
         
-      # This command adds a new server configuration to the JFrog CLI   
-      #- run: |
-      #   export SERVER_ID="test"
-      #   jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
-                     
-        
-      #- name: Set Current Date as Env Variable
-      #  id: setdate
-      #  run: |
-      #       echo "NOW=$(date +'%Y%m%dT%H%M%S')" >> $GITHUB_ENV
-      #       echo $NOW
-
+     # This command adds a new server configuration to the JFrog CLI   
+      - run: |
+         export SERVER_ID="test"
+         jf c add $SERVER_ID --url=$JF_URL --access-token=$JF_ACCESS_TOKEN --interactive=false
          
-       # This action creates a new test file and uploads it to Artifactory   
-     # - name: Push Build to Artifactory
-     #   run: |
-      #       mv '${{ github.workspace }}/dist/src_spark_app-0.0.1-py3-none-any.whl' '${{ github.workspace }}/dist/src_spark_app-${{ env.NOW }}.whl'
-       #      ls -la dist/
-        #     jf rt upload --flat=true '${{ github.workspace }}/dist/*.whl' apcdl-pypi-local/ 
+     # This action creates a new test file and uploads it to Artifactory   
+      - name: Push Build to Artifactory
+        run: |
+             jf rt upload --flat=true '${{ github.workspace }}/dist/src_spark_app-${{ env.newtagvalue }}.whl' apcdl-pypi-local/ 
  
              
              
