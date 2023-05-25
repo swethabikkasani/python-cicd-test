@@ -104,7 +104,7 @@ jobs:
      # This action creates a new test file and uploads it to Artifactory   
       - name: Push Build to Artifactory
         run: |
-             jf rt upload --flat=true '${{ github.workspace }}/dist/src_spark_app-${{ env.newtagvalue }}.whl' apcdl-pypi-local/ 
+             jf rt upload --flat=true '${{ github.workspace }}/dist/src_spark_app-${{ env.newtagvalue }}-*.whl' apcdl-pypi-local/ 
  
              
              
