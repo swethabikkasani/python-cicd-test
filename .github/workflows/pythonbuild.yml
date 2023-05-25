@@ -89,7 +89,7 @@ jobs:
           rm -rf dist/*.whl
           pipenv lock
           python3 setup.py bdist_wheel
-          mv '${{ github.workspace }}/dist/src_spark_app-0.0.1-py3-none-any.whl' '${{ github.workspace }}/dist/src_spark_app-${{ env.newtagvalue }}.whl'
+          mv '${{ github.workspace }}/dist/src_spark_app*.whl' '${{ github.workspace }}/dist/src_spark_app-${{ env.newtagvalue }}.whl'
           ls -la dist/
           
       #- uses: jfrog/setup-jfrog-cli@v3
