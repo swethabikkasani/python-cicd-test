@@ -40,10 +40,18 @@ jobs:
           ruff --format=github --target-version=py39 .
         continue-on-error: true
         
-      - name: Run Python unit test cases
-        run: |
-           pip install pytest
-           cd ${{ github.workspace }} && pytest ${{ github.workspace }}/tests/tests_basic.py
+      - name: Run pytests
+        uses: dariocurr/pytest-summary@main
+        with:
+          paths: tests/**.py
+          options: -vv -s
+          output: test-summary.txt
+          show: "fail, skip"
+        
+      #- name: Run Python unit test cases
+      #  run: |
+      #     pip install pytest
+      #     cd ${{ github.workspace }} && pytest ${{ github.workspace }}/tests/tests_basic.py
         
       #- name: Run Pytests
       #  uses: pavelzw/pytest-action@v2
