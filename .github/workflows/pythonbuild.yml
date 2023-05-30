@@ -43,9 +43,7 @@ jobs:
       - name: Run Python unit test cases
         run: |
            pip install pytest
-           touch pytestreports
-           pytest ${{ github.workspace }}/tests/tests_basic.py >> pytestreports
-           cat pytestreports
+           python -m pytest --import-mode=append tests/
         
       #- name: Run Pytests
       #  uses: pavelzw/pytest-action@v2
