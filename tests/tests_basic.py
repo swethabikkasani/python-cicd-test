@@ -3,7 +3,6 @@ import unittest
 from src_spark_app.main_app.calculations import Calculations
 from src_spark_app.main_app.prime_no import is_prime
 
-
 class Testing(unittest.TestCase):
     def test_string(self):
         a = 'some'
