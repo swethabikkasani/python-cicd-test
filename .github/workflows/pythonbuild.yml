@@ -43,8 +43,7 @@ jobs:
       - name: Run Python unit test cases
         run: |
            pip install pytest
-           cd ${{ github.workspace }}
-           pytest /tests/tests_basic.py
+           cd ${{ github.workspace }} && pytest ${{ github.workspace }}/tests/tests_basic.py
         
       #- name: Run Pytests
       #  uses: pavelzw/pytest-action@v2
