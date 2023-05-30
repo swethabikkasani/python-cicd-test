@@ -45,7 +45,6 @@ jobs:
         with:
           paths: tests/**.py
           options: -vv -s
-          output: test-summary.txt
           show: "fail, skip"
         
       #- name: Run Python unit test cases
