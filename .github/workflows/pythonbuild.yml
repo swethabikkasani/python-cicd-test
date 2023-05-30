@@ -44,7 +44,7 @@ jobs:
         run: |
            pip install pytest
            touch pytestreports
-           echo "pytest ${{ github.workspace }}/tests/tests_basic.py" >> pytestreports
+           pytest ${{ github.workspace }}/tests/tests_basic.py >> pytestreports
            cat pytestreports
         
       #- name: Run Pytests
