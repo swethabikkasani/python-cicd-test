@@ -11,6 +11,8 @@ on:
       - '.github/**/*.yml'
       - '.gitignore'
       
+permissions: write-all
+      
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -85,14 +87,7 @@ jobs:
              echo "newtagvalue=$(./increment_version.sh -$release_type ${{ steps.previoustag.outputs.tag }} )" >> $GITHUB_ENV       
       
       - run: echo "New Tag Value is ${{ env.newtagvalue }}"
-        
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
-        with:
-          github_token: ${{ secrets.MY_GITHUB_TOKEN }}
-          custom_tag: ${{ env.newtagvalue }}
-              
+      
       - name: Build package
         run: |
           cat setup.py | grep version
@@ -101,6 +96,15 @@ jobs:
           pipenv lock
           python3 setup.py bdist_wheel
           ls -la dist/
+          
+      - run: echo ${{ secrets.MY_GITHUB_TOKEN }}
+      
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.MY_GITHUB_TOKEN }}
+          custom_tag: ${{ env.newtagvalue }}
           
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
